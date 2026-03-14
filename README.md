@@ -80,6 +80,79 @@ The key design rule is that order workflow rules should not live inside controll
 
 - `GET /api/webhook-deliveries`
 
+## Example Payloads
+
+### Create customer
+
+```json
+{
+  "email": "jane@example.com",
+  "name": "Jane Doe"
+}
+```
+
+### Create product
+
+```json
+{
+  "sku": "SKU-CHAIR-001",
+  "name": "Office Chair",
+  "price_amount": 12900,
+  "currency": "EUR"
+}
+```
+
+### Create order
+
+```json
+{
+  "customer_id": "9d56c68f-12c8-4eb8-b81c-37f3159a5e21"
+}
+```
+
+### Add order line
+
+```json
+{
+  "product_id": "0dfe91d1-f0ff-418e-a2c2-348f37a7ecb0",
+  "quantity": 2
+}
+```
+
+### Payment webhook
+
+```json
+{
+  "event_id": "evt_01HXYZPAYMENT",
+  "order_id": "f4f4fdb6-ef25-4a0d-9718-f3af767b3a89",
+  "status": "paid",
+  "received_at": "2026-03-14T10:15:00Z",
+  "amount": 25800,
+  "currency": "EUR"
+}
+```
+
+## Example Response
+
+```json
+{
+  "id": "f4f4fdb6-ef25-4a0d-9718-f3af767b3a89",
+  "customer_id": "9d56c68f-12c8-4eb8-b81c-37f3159a5e21",
+  "status": "submitted",
+  "lines": [
+    {
+      "product_id": "0dfe91d1-f0ff-418e-a2c2-348f37a7ecb0",
+      "quantity": 2,
+      "unit_price_amount": 12900
+    }
+  ],
+  "totals": {
+    "subtotal_amount": 25800,
+    "currency": "EUR"
+  }
+}
+```
+
 ## Folder Structure
 
 ```text
@@ -136,9 +209,16 @@ The intended test split is:
 High-value scenarios:
 
 - draft order can be submitted once
+- draft order cannot be submitted without lines
 - duplicate payment webhook is handled idempotently
 - invalid order transitions are rejected
 - outbound webhook failures are retried safely
+
+## Documentation
+
+- API spec: [docs/openapi.yaml](C:/Users/mulde/Documents/Github/order-flow-api/docs/openapi.yaml)
+- Architecture notes: [docs/architecture.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/architecture.md)
+- Initial backlog: [docs/backlog.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/backlog.md)
 
 ## Tradeoffs
 

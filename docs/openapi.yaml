@@ -1,0 +1,209 @@
+openapi: 3.1.0
+info:
+  title: Order Flow API
+  version: 0.1.0
+  description: |
+    Laravel API for order workflows, payment webhooks, fulfillment events,
+    and production-minded backend design.
+servers:
+  - url: https://example.test
+paths:
+  /api/customers:
+    post:
+      summary: Create a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerRequest'
+      responses:
+        '201':
+          description: Customer created
+  /api/products:
+    post:
+      summary: Create a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Product created
+  /api/orders:
+    post:
+      summary: Create a draft order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Draft order created
+  /api/orders/{order}:
+    get:
+      summary: Get an order
+      parameters:
+        - in: path
+          name: order
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+  /api/orders/{order}/lines:
+    post:
+      summary: Add an order line
+      parameters:
+        - in: path
+          name: order
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOrderLineRequest'
+      responses:
+        '200':
+          description: Order updated
+  /api/orders/{order}/submit:
+    post:
+      summary: Submit a draft order
+      parameters:
+        - in: path
+          name: order
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Invalid order transition
+  /api/webhooks/payments:
+    post:
+      summary: Handle a payment webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentWebhookRequest'
+      responses:
+        '200':
+          description: Payment event accepted
+        '409':
+          description: Duplicate or invalid event
+  /api/webhook-deliveries:
+    get:
+      summary: List outbound webhook deliveries
+      responses:
+        '200':
+          description: Delivery log
+components:
+  schemas:
+    CreateCustomerRequest:
+      type: object
+      required: [email, name]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+    CreateProductRequest:
+      type: object
+      required: [sku, name, price_amount, currency]
+      properties:
+        sku:
+          type: string
+        name:
+          type: string
+        price_amount:
+          type: integer
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+    CreateOrderRequest:
+      type: object
+      required: [customer_id]
+      properties:
+        customer_id:
+          type: string
+          format: uuid
+    AddOrderLineRequest:
+      type: object
+      required: [product_id, quantity]
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          minimum: 1
+    PaymentWebhookRequest:
+      type: object
+      required: [event_id, order_id, status, received_at, amount, currency]
+      properties:
+        event_id:
+          type: string
+        order_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [paid]
+        received_at:
+          type: string
+          format: date-time
+        amount:
+          type: integer
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+    OrderLine:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        unit_price_amount:
+          type: integer
+    OrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLine'

@@ -49,4 +49,31 @@ final class Order
 
         $this->status = OrderStatus::PAID;
     }
+
+    public function startFulfillment(): void
+    {
+        if ($this->status !== OrderStatus::PAID) {
+            throw new DomainException('Only paid orders can enter fulfillment.');
+        }
+
+        $this->status = OrderStatus::FULFILLING;
+    }
+
+    public function fulfill(): void
+    {
+        if ($this->status !== OrderStatus::FULFILLING) {
+            throw new DomainException('Only fulfilling orders can be fulfilled.');
+        }
+
+        $this->status = OrderStatus::FULFILLED;
+    }
+
+    public function cancel(): void
+    {
+        if (in_array($this->status, [OrderStatus::FULFILLED, OrderStatus::CANCELLED], true)) {
+            throw new DomainException('Fulfilled or cancelled orders cannot be cancelled again.');
+        }
+
+        $this->status = OrderStatus::CANCELLED;
+    }
 }
