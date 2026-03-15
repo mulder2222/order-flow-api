@@ -20,6 +20,12 @@ paths:
       responses:
         '201':
           description: Customer created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/products:
     post:
       summary: Create a product
@@ -32,6 +38,12 @@ paths:
       responses:
         '201':
           description: Product created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/orders:
     post:
       summary: Create a draft order
@@ -44,6 +56,12 @@ paths:
       responses:
         '201':
           description: Draft order created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/orders/{order}:
     get:
       summary: Get an order
@@ -80,6 +98,12 @@ paths:
       responses:
         '200':
           description: Order updated
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/orders/{order}/submit:
     post:
       summary: Submit a draft order
@@ -99,6 +123,10 @@ paths:
                 $ref: '#/components/schemas/OrderResponse'
         '422':
           description: Invalid order transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/webhooks/payments:
     post:
       summary: Handle a payment webhook
@@ -113,6 +141,10 @@ paths:
           description: Payment event accepted
         '409':
           description: Duplicate or invalid event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/webhook-deliveries:
     get:
       summary: List outbound webhook deliveries
@@ -207,3 +239,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrderLine'
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object

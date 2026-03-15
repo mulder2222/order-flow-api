@@ -219,6 +219,10 @@ High-value scenarios:
 - API spec: [docs/openapi.yaml](C:/Users/mulde/Documents/Github/order-flow-api/docs/openapi.yaml)
 - Architecture notes: [docs/architecture.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/architecture.md)
 - Initial backlog: [docs/backlog.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/backlog.md)
+- Error contract: [docs/error-contract.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/error-contract.md)
+- ADRs: [docs/adr/0001-layered-architecture.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/adr/0001-layered-architecture.md), [docs/adr/0002-idempotent-payment-webhooks.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/adr/0002-idempotent-payment-webhooks.md)
+- Endpoint implementation notes: [docs/endpoint-implementation-plan.md](C:/Users/mulde/Documents/Github/order-flow-api/docs/endpoint-implementation-plan.md)
+- Docker bootstrap plan: [docker-compose.yml](C:/Users/mulde/Documents/Github/order-flow-api/docker-compose.yml)
 
 ## Tradeoffs
 

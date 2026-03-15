@@ -32,3 +32,11 @@
 - add unit tests for transition rules
 - add integration tests for webhook delivery
 - add GitHub Actions workflow
+
+## Milestone 6: Delivery Readiness
+
+- add Docker compose bootstrap
+- add `.env.example`
+- define error contract
+- document architecture decisions
+- add endpoint implementation notes
